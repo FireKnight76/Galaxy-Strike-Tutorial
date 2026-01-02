@@ -4,6 +4,8 @@ using UnityEngine.InputSystem;
 public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] float controlSpeed = 10f;
+    [SerializeField] float xClamp = 5f;
+    [SerializeField] float yClamp = 5f;
 
     Vector2 movement;
 
@@ -15,10 +17,17 @@ public class PlayerMovement : MonoBehaviour
 
     void MovePlayer()
     {
-        float offsetX = movement.x * controlSpeed * Time.deltaTime;
-        float offsetY = movement.y * controlSpeed * Time.deltaTime;
+        float xOffset = movement.x * controlSpeed * Time.deltaTime;
+        float xRawPos = transform.localPosition.x + xOffset;
+        float clampedXPos = Mathf.Clamp(xRawPos, -xClamp, xClamp);
 
-        transform.localPosition = new Vector3(transform.localPosition.x + offsetX, transform.localPosition.y + offsetY, 0);
+        float yOffset = movement.y * controlSpeed * Time.deltaTime;
+        float yRawPos = transform.localPosition.y + yOffset;
+        float clampedYPos = Mathf.Clamp(yRawPos, -yClamp, yClamp);
+
+
+
+        transform.localPosition = new Vector3(clampedXPos, clampedYPos, 0);
         
     }
 
