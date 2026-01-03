@@ -7,12 +7,17 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float xClamp = 5f;
     [SerializeField] float yClamp = 5f;
 
+    [SerializeField] float controllRollFactor = 20f;
+    [SerializeField] float controllPitchFactor = 20f;
+    [SerializeField] float rotationSpeed = 10f;
+
     Vector2 movement;
 
     // Update is called once per frame
     void Update()
     {
         MovePlayer();
+        ProcessRotation();
     }
 
     void MovePlayer()
@@ -35,5 +40,15 @@ public class PlayerMovement : MonoBehaviour
     {
         movement = value.Get<Vector2>();
         
+    }
+    
+    void ProcessRotation()
+    {
+        float rollShip = -controllRollFactor * movement.x;
+        float pitchShip = -controllPitchFactor * movement.y;
+
+        Quaternion targetRotation = Quaternion.Euler(pitchShip, 0f, rollShip);
+        transform.localRotation = Quaternion.Lerp(transform.localRotation, targetRotation, rotationSpeed * Time.deltaTime);
+        //transform.localRotation = targetRotation;
     }
 }
